@@ -50,13 +50,25 @@
 
       # ------------------------------------------------------------
       # Checks (nix flake check)
-      # Runs treefmt in check mode to ensure the repo is properly formatted.
-      # Useful in CI to fail builds if formatting or linting issues exist.
+      # Runs formatting checks and tests in CI
       # ------------------------------------------------------------
-      checks = forEachSystem (system: {
-        formatting =
-          (treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./nix/treefmt.nix).config.build.check
-            self;
-      });
+      checks = forEachSystem (
+        system:
+        let
+          pkgs = nixpkgs.legacyPackages.${system};
+          devConfig = import ./nix/devshell.nix { inherit nixpkgs system; };
+        in
+        {
+          lint = (treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix).config.build.check self;
+
+          test = pkgs.stdenv.mkDerivation {
+            name = "dodo-test";
+            src = self;
+            nativeBuildInputs = with devConfig.devShells.${system}.default; buildInputs;
+            buildPhase = "cd packages/dodo && bun test --coverage";
+            installPhase = "mkdir -p $out";
+          };
+        }
+      );
     };
 }
