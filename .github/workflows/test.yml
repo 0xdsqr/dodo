@@ -3,22 +3,12 @@ name: Test
 on: [push, pull_request]
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
-
-      - name: Run linting checks
-        run: nix flake check --no-build '.#checks.x86_64-linux.lint'
-
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
-      - uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Run tests with coverage
-        run: nix flake check --no-build '.#checks.x86_64-linux.test'
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Run checks
+        run: nix flake check

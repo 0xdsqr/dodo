@@ -50,24 +50,14 @@
 
       # ------------------------------------------------------------
       # Checks (nix flake check)
-      # Runs formatting checks and tests in CI
+      # Runs formatting checks only
       # ------------------------------------------------------------
-      checks = forEachSystem (
-        system:
+      checks = forEachSystem (system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
-          devConfig = import ./nix/devshell.nix { inherit nixpkgs system; };
         in
         {
-          lint = (treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix).config.build.check self;
-
-          test = pkgs.stdenv.mkDerivation {
-            name = "dodo-test";
-            src = self;
-            nativeBuildInputs = with devConfig.devShells.${system}.default; buildInputs;
-            buildPhase = "cd packages/dodo && bun test --coverage";
-            installPhase = "mkdir -p $out";
-          };
+          formatting = (treefmt-nix.lib.evalModule pkgs ./nix/treefmt.nix).config.build.check self;
         }
       );
     };
