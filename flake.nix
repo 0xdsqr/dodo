@@ -52,7 +52,8 @@
       # Checks (nix flake check)
       # Runs formatting checks only
       # ------------------------------------------------------------
-      checks = forEachSystem (system:
+      checks = forEachSystem (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
         in

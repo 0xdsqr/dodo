@@ -26,9 +26,7 @@ Dodo brings Mongoose-like developer experience to DynamoDB:
 - **Simple CRUD** - `create()`, `get()`, `update()`, `delete()`, `query()` - that's it
 - **Batch & transactions** - Multi-record operations with atomic guarantees
 
-## ⇁ Quick Start
-
-**Step 0: Install**
+## ⇁ Installation
 
 | Package Manager | Command |
 |-----------------|---------|
@@ -36,6 +34,8 @@ Dodo brings Mongoose-like developer experience to DynamoDB:
 | npm | `npm install @dsqr/dodo` |
 | pnpm | `pnpm add @dsqr/dodo` |
 | deno | `deno add jsr:@dsqr/dodo` |
+
+## ⇁ Quick Start
 
 **Step 1: Create a schema**
 
