@@ -26,19 +26,89 @@ Dodo brings Mongoose-like developer experience to DynamoDB:
 - **Simple CRUD** - `create()`, `get()`, `update()`, `delete()`, `query()` - that's it
 - **Batch & transactions** - Multi-record operations with atomic guarantees
 
+## ⇁ Quick Start
+
+**Step 0: Install**
+
+| Package Manager | Command |
+|-----------------|---------|
+| bun | `bun add @dsqr/dodo` |
+| npm | `npm install @dsqr/dodo` |
+| pnpm | `pnpm add @dsqr/dodo` |
+| deno | `deno add jsr:@dsqr/dodo` |
+
+**Step 1: Create a schema**
+
+```typescript
+import { z } from "zod"
+
+const UserSchema = z.object({
+  id: z.string(),
+  email: z.string().email(),
+  name: z.string(),
+})
+```
+
+**Step 2: Create a dodo instance**
+
+```typescript
+import { createDodo, keys } from "@dsqr/dodo"
+
+const dodo = createDodo({
+  table: "my-users",
+  region: "us-east-1"
+})
+```
+
+**Step 3: Create an entity**
+
+```typescript
+const User = dodo.entity({
+  name: "User",
+  schema: UserSchema,
+  keys: keys.single("USER")
+})
+```
+
+**Step 4: Use it**
+
+```typescript
+// Create
+const user = await User.create({
+  id: "user-1",
+  email: "alice@example.com",
+  name: "Alice"
+})
+
+// Get
+const found = await User.get("user-1")
+
+// Update
+await User.update("user-1", { name: "Alice Smith" })
+
+// Delete
+await User.delete("user-1")
+```
+
+That's it! 🎉
+
 ## ⇁ Key Features
 
 - 🔒 **Full Type Inference** - TypeScript knows your schema, entity methods, and return types
 - 📦 **Schema-based** - Define entities with Zod, get validation + type safety everywhere
 - 🔑 **Flexible Keys** - 4 key patterns (single, tenant, hierarchy, custom) for any data structure
-- 🧩 **Composable Plugins** - Chain transforms: timestamps → soft delete → encryption → custom
-- 🔐 **Field-level Encryption** - Optional built-in encryption for sensitive data
 - ⚡ **Batch Operations** - Create/get/delete multiple records efficiently
 - 🤝 **Transactions** - All-or-nothing multi-record changes with DynamoDB transactions
 - 🎯 **Query Builder** - Fluent API for complex queries with filters and pagination
-- 💾 **Soft Delete** - Mark deleted instead of removing, auto-filter from queries
-- 🔤 **Case Transform** - camelCase ↔ snake_case automatic conversion
-- 📅 **Auto Timestamps** - createdAt/updatedAt managed automatically
+- 🧩 **Composable Plugins** - Extend with timestamps, soft delete, encryption, case conversion, or custom logic
+
+## ⇁ Built-in Plugins
+
+- 📅 **Timestamps** - Auto-adds createdAt/updatedAt to every entity
+- 💾 **Soft Delete** - Mark records as deleted without removing them, auto-filtered from queries
+- 🔤 **Case Transform** - Convert between camelCase (API) and snake_case (database)
+- 🔐 **Encryption** - Field-level encryption for sensitive data
+- 🧩 **Custom** - Write your own plugins with beforeCreate/afterGet/beforeUpdate/afterDelete hooks
 
 ## ⇁ API Reference
 
