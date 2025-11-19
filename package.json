@@ -1,0 +1,17 @@
+{
+  "name": "dodo",
+  "module": "index.ts",
+  "type": "module",
+  "scripts": {
+    "style:check": "",
+    "style:fix": ""
+  },
+  "workspaces": [
+    "packages/dodo"
+  ],
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "5.8.3"
+  },
+  "private": true
+}

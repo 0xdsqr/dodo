@@ -27,6 +27,7 @@ in
 
       # Language runtimes
       bun
+      jdk21
       starship
     ];
 
@@ -39,6 +40,7 @@ in
       fi
 
       echo "Bun version: $(bun --version)"
+      echo "Java version: $(java -version 2>&1 | head -n 1)"
       echo "🚀 Development shell activated, you can now compile things"
     '';
 
